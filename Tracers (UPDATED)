@@ -76,6 +76,7 @@ local Players = game:GetService("Players")
 local Camera = game:GetService("Workspace").CurrentCamera
 local UserInputService = game:GetService("UserInputService")
 local TestService = game:GetService("TestService")
+local Typing = false -- DO NOT TOUCH
 
 --// Global variables
 
@@ -238,10 +239,20 @@ local function CreateTracers()
     end
 end
 
+--// Makes sure that the player is not typing because it would trigger something if they hit a key that plays a role in this script.
+
+UserInputService.TextBoxFocused:Connect(function()
+    Typing = true
+end)
+
+UserInputService.TextBoxFocusReleased:Connect(function()
+    Typing = false
+end)
+
 --// Checks for if you pressed one of the keys that play a role in the script - if so, then the script activates.
 
 UserInputService.InputBegan:Connect(function(Input)
-    if Input.KeyCode == _G.ModeSkipKey then -- Checks if the key that you pressed was the key that was assigned to the global variable ModeSkipKey.
+    if Input.KeyCode == _G.ModeSkipKey and Typing == false then -- Checks if the key that you pressed was the key that was assigned to the global variable ModeSkipKey.
         if _G.FromMouse == true and _G.FromCenter == false and _G.FromBottom == false and _G.TracersVisible == true then
             _G.FromCenter = false
             _G.FromBottom = true
@@ -279,7 +290,7 @@ UserInputService.InputBegan:Connect(function(Input)
                 })
             end
         end
-    elseif Input.KeyCode == _G.DisableKey then -- Otherwise if the key that you pressed wasn't ModeSkipKey and it was the key that was assigned to the global variable DisableKey then it executes the code wrapped below.
+    elseif Input.KeyCode == _G.DisableKey and Typing == false then -- Otherwise if the key that you pressed wasn't ModeSkipKey and it was the key that was assigned to the global variable DisableKey then it executes the code wrapped below.
         _G.TracersVisible = not _G.TracersVisible -- Changes the global variable TracersVisible's value to the opposite of what it was.
         
         if _G.SendNotifications == true then
