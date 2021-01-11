@@ -9,7 +9,7 @@ I decided to make this script unobfuscated so that people can learn by reading a
 
 ## Script
 
-Load the script by using the code below or by copying it from [here](https://github.com/UbicastDev/ROBLOX-Tracer-Script/blob/main/Tracers%20(UPDATED)).
+Load the script by using the code below or by copying it from [here](https://github.com/UbicastDev/Tracers-Script/blob/main/Tracers).
 ```lua
 loadstring(game:HttpGet("https://pastebin.com/raw/didXQtDc"))()
 ```
