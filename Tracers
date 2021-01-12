@@ -104,7 +104,7 @@ _G.DisableKey = Enum.KeyCode.Q   -- The key that disables / enables the tracers.
 
 local function CreateTracers()
     for _, v in pairs(Players:GetPlayers()) do -- Goes through all of the players 1 by 1 that are currently playing the game.
-        if v.Name ~= game.Players.LocalPlayer.Name and workspace[v.Name] ~= nil and workspace[v.Name].HumanoidRootPart ~= nil then -- If the script finds the player's character and the character is not your character then it continues.
+        if v.Name ~= Players.LocalPlayer.Name and workspace[v.Name] ~= nil and workspace[v.Name].HumanoidRootPart ~= nil then -- If the script finds the player's character and the character is not your character then it continues.
             local Vector, OnScreen = Camera:WorldToViewportPoint(workspace[v.Name].HumanoidRootPart.Position) -- Used to calculate where the person being traced is on your screen. (Vector)
             
             --// Creates the tracer / creates a line that will be used to trace a player.
