@@ -13,7 +13,7 @@ This script is unobfuscated so that people can learn by reading and experimentin
 
 Load the script by using the code below or by copying it from [here](https://github.com/UbicastDev/Aimbot-Script/blob/main/Aimbot%20Script).
 ```lua
-loadstring(game:HttpGet("https://pastebin.com/raw/ygp8Enye"))()
+loadstring(game:HttpGet("https://pastebin.com/raw/didXQtDc"))()
 ```
 
 ## Features
