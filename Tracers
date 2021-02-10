@@ -1,6 +1,5 @@
 --[[
 
-
 		██╗░░░██╗██████╗░██╗░█████╗░░█████╗░░██████╗████████╗
 		██║░░░██║██╔══██╗██║██╔══██╗██╔══██╗██╔════╝╚══██╔══╝
 		██║░░░██║██████╦╝██║██║░░╚═╝███████║╚█████╗░░░░██║░░░
@@ -8,51 +7,13 @@
 		╚██████╔╝██████╦╝██║╚█████╔╝██║░░██║██████╔╝░░░██║░░░
 		░╚═════╝░╚═════╝░╚═╝░╚════╝░╚═╝░░╚═╝╚═════╝░░░░╚═╝░░░
 
-
--- \\ ^ Developer Notes ^ // --
-
-- I decided to make this script unobfuscated so that people can learn by reading and experimenting with the source code of this script.
-
-- This script has comments everywhere so that the user experimenting with the script can learn something.
-
-- This tracer script was made by Ubicast, to find contact information about me please visit the link below.
-
-- More information about Ubicast : https://github.com/UbicastDev
-
-- You can freely change any of the properties below to suit your needs.
-
-  [?] (1 - Name, 2 - Value Type, 3 - Role Name, 4 - Example)
-
-  [#] Changable properties :
-   1. Thickness <int> [TracerThickness]                             - 1, 2, 3...
-   2. Color <Color3> [TracerColor]                                  - Color3.fromRGB(x, x, x)
-   3. Transparency <int> [TracerTransparency]                       - 1, 2, 3...
-   4. Visible <bool> [TracersVisible]                               - true / false
-   5. Team Check <bool> [TeamCheck]                                 - true / false
-   6. From Bottom <bool> [FromBottom]                               - true / false
-   7. From Center <bool> [FromCenter]                               - true / false
-   8. From Mouse <bool> [FromMouse]                                 - true / false
-   9. Visible When Not In Sight <bool> [VisibleWhenNotInSight]      - true / false
-   10. Default Settings <bool> [DefaultSettings]                    - true / false
-   11. Send Notifications <bool> [SendNotifications]                - true / false
-   12. Mode Skip Key <enum> [ModeSkipKey]                           - Enum.KeyCode.(Key)
-   13. Disable Key <enum> [DisableKey]                              - Enum.KeyCode.(Key)
-
-- [!] This script remains undetected and has been tested on games with an Anti-Cheat system.
-
-- [!] This script only works on exploits that support the API refrence Drawing.
-
 ]]
-
---<========================================================>SCRIPT<========================================================>--
-
---// Checks if your exploit is supported.
 
 local function API_Check()
     if Drawing == nil then
-        return "No" -- Returns "No" meaning that the exploit is not supported.
+        return "No"
     else
-        return "Yes" -- Returns "Yes" meaning that the exploit is supported. (Not used, just for refrence)
+        return "Yes"
     end
 end
 
@@ -66,25 +27,21 @@ if Find_Required == "No" then
         Button1 = "OK"
     })
 
-    return -- Stops script execution.
+    return
 end
-
---// Local variables
 
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local Camera = game:GetService("Workspace").CurrentCamera
 local UserInputService = game:GetService("UserInputService")
 local TestService = game:GetService("TestService")
-local Typing = false -- DO NOT TOUCH
 
---// Global variables
+local Typing = false
 
 _G.SendNotifications = true   -- If set to true then the script would notify you frequently on any changes applied and when loaded / errored. (If a game can detect this, it is recommended to set it to false)
 _G.DefaultSettings = false   -- If set to true then the tracer script would run with default settings regardless of any changes you made.
 
 _G.TeamCheck = false   -- If set to true then the script would create tracers only for the enemy team members.
-_G.VisibleWhenNotInSight = false   -- If set to true then the tracers will be visible even if the player being traced is not visible on your screen. (NOT RECOMMENDED, VERY GLITCHY)
 
 --[!]-- ONLY ONE OF THESE VALUES SHOULD BE SET TO TRUE TO NOT ERROR THE SCRIPT --[!]--
 
@@ -93,57 +50,69 @@ _G.FromCenter = false   -- If set to true, the tracers will come from the center
 _G.FromBottom = true   -- If set to true, the tracers will come from the bottom of your screen.
 
 _G.TracersVisible = true   -- If set to true then the tracers will be visible and vice versa.
-_G.TracerColor = Color3.fromRGB(255, 255, 255)   -- The color that the tracers would appear as.
+_G.TracerColor = Color3.fromRGB(255, 80, 10)   -- The color that the tracers would appear as.
 _G.TracerThickness = 1   -- The thickness of the tracers.
-_G.TracerTransparency = 1   -- The transparency of the tracers.
+_G.TracerTransparency = 0.7   -- The transparency of the tracers.
 
 _G.ModeSkipKey = Enum.KeyCode.E   -- The key that changes between modes that indicate where will the tracers come from.
 _G.DisableKey = Enum.KeyCode.Q   -- The key that disables / enables the tracers.
 
---// The main part of the script wrapped in a function waiting to get called.
-
 local function CreateTracers()
-    for _, v in pairs(Players:GetPlayers()) do -- Goes through all of the players 1 by 1 that are currently playing the game.
-        if v.Name ~= Players.LocalPlayer.Name and workspace[v.Name] ~= nil and workspace[v.Name].HumanoidRootPart ~= nil then -- If the script finds the player's character and the character is not your character then it continues.
-            local Vector, OnScreen = Camera:WorldToViewportPoint(workspace[v.Name].HumanoidRootPart.Position) -- Used to calculate where the person being traced is on your screen. (Vector)
-            
-            --// Creates the tracer / creates a line that will be used to trace a player.
-
+    for _, v in pairs(Players:GetPlayers()) do
+        if v.Name ~= game.Players.LocalPlayer.Name then
             local TracerLine = Drawing.new("Line")
-            TracerLine.Visible = true
-            TracerLine.Thickness = _G.TracerThickness
-            TracerLine.Transparency = _G.TracerTransparency
-            TracerLine.Color = _G.TracerColor
     
-            RunService.RenderStepped:Connect(function() -- Executes after every frame that your computer rendered. (This depends on your FPS - Frames Per Second)
+            RunService.RenderStepped:Connect(function()
                 if workspace:FindFirstChild(v.Name) ~= nil and workspace[v.Name]:FindFirstChild("HumanoidRootPart") ~= nil then
-                    local Vector, OnScreen = Camera:WorldToViewportPoint(workspace[v.Name].HumanoidRootPart.Position)
+                    local Vector, OnScreen = Camera:WorldToViewportPoint(workspace:WaitForChild(v.Name, math.huge).HumanoidRootPart.Position)
                     
-                    if _G.TeamCheck == true then -- Checks if the global variable TeamCheck is set to true.
-                        if Players[v.Name].Team ~= Players.LocalPlayer.Team then -- If the player isn't on your team then it continues forward
+                    TracerLine.Thickness = _G.TracerThickness
+                    TracerLine.Transparency = _G.TracerTransparency
+                    TracerLine.Color = _G.TracerColor
 
-                            -- // Checks where the tracer is suppose to come from.
+                    if _G.FromMouse == true and _G.FromCenter == false and _G.FromBottom == false then
+                        TracerLine.From = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
+                    elseif _G.FromMouse == false and _G.FromCenter == true and _G.FromBottom == false then
+                        TracerLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+                    elseif _G.FromMouse == false and _G.FromCenter == false and _G.FromBottom == true then
+                        TracerLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
+                    end
 
-                            if _G.FromMouse == true and _G.FromCenter == false and _G.FromBottom == false then
-                                TracerLine.From = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
-                            elseif _G.FromMouse == false and _G.FromCenter == true and _G.FromBottom == false then
-                                TracerLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-                            elseif _G.FromMouse == false and _G.FromCenter == false and _G.FromBottom == true then
-                                TracerLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
-                            end
-            
-                            --// Checks if the player can be seen / found on your screen.
-
-                            if OnScreen == true and _G.TracersVisible == true then
-                                TracerLine.To = Vector2.new(Vector.X, Vector.Y)
-                                TracerLine.Visible = true
-                            elseif _G.TracersVisible == false or _G.VisibleWhenNotInSight == false and OnScreen == false then
+                    if OnScreen == true  then
+                        TracerLine.To = Vector2.new(Vector.X, Vector.Y)
+                        if _G.TeamCheck == true then 
+                            if Players.LocalPlayer.Team ~= v.Team then
+                                TracerLine.Visible = _G.TracersVisible
+                            else
                                 TracerLine.Visible = false
                             end
+                        else
+                            TracerLine.Visible = _G.TracersVisible
                         end
-                    elseif _G.TeamCheck == false then -- If the global variable TeamCheck is set to false then it continues forward.
-                    
-                        -- // Checks where the tracer is suppose to come from.
+                    else
+                        TracerLine.Visible = false
+                    end
+                end
+            end)
+
+            Players.PlayerRemoving:Connect(function()
+                TracerLine.Visible = false
+            end)
+        end
+    end
+
+    Players.PlayerAdded:Connect(function(Player)
+        Player.CharacterAdded:Connect(function(v)
+            if v.Name ~= game.Players.LocalPlayer.Name then
+                local TracerLine = Drawing.new("Line")
+        
+                RunService.RenderStepped:Connect(function()
+                    if workspace:FindFirstChild(v.Name) ~= nil and workspace[v.Name]:FindFirstChild("HumanoidRootPart") ~= nil then
+                        local Vector, OnScreen = Camera:WorldToViewportPoint(workspace:WaitForChild(v.Name, math.huge).HumanoidRootPart.Position)
+                        
+                        TracerLine.Thickness = _G.TracerThickness
+                        TracerLine.Transparency = _G.TracerTransparency
+                        TracerLine.Color = _G.TracerColor
 
                         if _G.FromMouse == true and _G.FromCenter == false and _G.FromBottom == false then
                             TracerLine.From = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
@@ -152,94 +121,33 @@ local function CreateTracers()
                         elseif _G.FromMouse == false and _G.FromCenter == false and _G.FromBottom == true then
                             TracerLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
                         end
-        
-                        --// Checks if the player can be seen / found on your screen.
 
-                        if OnScreen == true and _G.TracersVisible == true then
+                        if OnScreen == true  then
                             TracerLine.To = Vector2.new(Vector.X, Vector.Y)
-                            TracerLine.Visible = true
-                        elseif _G.TracersVisible == false or _G.VisibleWhenNotInSight == false and OnScreen == false then
-                            TracerLine.Visible = false
-                        end 
-                    end
-                end
-            end)
-    
-            --// When a player joins the game, we need to create a new tracer.
-
-            Players.PlayerAdded:Connect(function(Player) -- Executes when a player joins the game.
-                Players[Player.Name].CharacterAdded:Connect(function() -- Executes once the player's character is created and added to Workspace.
-                    repeat wait() until workspace:FindFirstChild(Player.Name).HumanoidRootPart ~= nil -- Stops the code until the character's HumanoidRootPart is fully loaded / there.
-        
-                    local Vector, OnScreen = Camera:WorldToViewportPoint(workspace[Player.Name].HumanoidRootPart.Position)
-                    local TracerLine = Drawing.new("Line") -- Creates the tracer line.
-                    TracerLine.Visible = true -- Determines whether or not the tracer line would be visible.
-                    TracerLine.Thickness = _G.TracerThickness -- The tracer line's thickness.
-                    TracerLine.Transparency = _G.TracerTransparency -- The tracer line's transparency.
-                    TracerLine.Color = _G.TracerColor -- The tracer line's color.
-            
-                    RunService.RenderStepped:Connect(function() -- Executes after every frame that your computer rendered. (This depends on your FPS - Frames Per Second)
-                        if workspace:FindFirstChild(Player.Name) ~= nil and workspace[Player.Name]:FindFirstChild("HumanoidRootPart") ~= nil then
-                            local Vector, OnScreen = Camera:WorldToViewportPoint(workspace[Player.Name].HumanoidRootPart.Position)
-                            
-                            if _G.TeamCheck == true then -- Checks if the global variable TeamCheck is set to true.
-                                if Players[Player.Name].Team ~= Players.LocalPlayer.Team then -- If the player isn't on your team then it continues forward
-        
-                                    -- // Checks where the tracer is suppose to come from.
-        
-                                    if _G.FromMouse == true and _G.FromCenter == false and _G.FromBottom == false then
-                                        TracerLine.From = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
-                                    elseif _G.FromMouse == false and _G.FromCenter == true and _G.FromBottom == false then
-                                        TracerLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-                                    elseif _G.FromMouse == false and _G.FromCenter == false and _G.FromBottom == true then
-                                        TracerLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
-                                    end
-                    
-                                    --// Checks if the player can be seen / found on your screen.
-        
-                                    if OnScreen == true and _G.TracersVisible == true then
-                                        TracerLine.To = Vector2.new(Vector.X, Vector.Y)
-                                        TracerLine.Visible = true
-                                    elseif _G.TracersVisible == false or _G.VisibleWhenNotInSight == false and OnScreen == false then
-                                        TracerLine.Visible = false
-                                    end
-                                end
-                            elseif _G.TeamCheck == false then -- If the global variable TeamCheck is set to false then it continues forward.
-                            
-                                -- // Checks where the tracer is suppose to come from.
-        
-                                if _G.FromMouse == true and _G.FromCenter == false and _G.FromBottom == false then
-                                    TracerLine.From = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
-                                elseif _G.FromMouse == false and _G.FromCenter == true and _G.FromBottom == false then
-                                    TracerLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
-                                elseif _G.FromMouse == false and _G.FromCenter == false and _G.FromBottom == true then
-                                    TracerLine.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
-                                end
-                
-                                --// Checks if the player can be seen / found on your screen.
-        
-                                if OnScreen == true and _G.TracersVisible == true then
-                                    TracerLine.To = Vector2.new(Vector.X, Vector.Y)
-                                    TracerLine.Visible = true
-                                elseif _G.TracersVisible == false or _G.VisibleWhenNotInSight == false and OnScreen == false then
+                            if _G.TeamCheck == true then 
+                                if Players.LocalPlayer.Team ~= Player.Team then
+                                    TracerLine.Visible = _G.TracersVisible
+                                else
                                     TracerLine.Visible = false
-                                end 
+                                end
+                            else
+                                TracerLine.Visible = _G.TracersVisible
                             end
+                        else
+                            TracerLine.Visible = false
                         end
-                    end)
+                    else
+                        TracerLine.Visible = false
+                    end
                 end)
-            end)
 
-            --// When a player leaves the game and its character gets removed, we need to remove the tracer assigned to the player so that it doesn't stay there and annoy you.
-
-            Players.PlayerRemoving:Connect(function(Player)
-                 TracerLine.Visible = false
-            end)
-        end
-    end
+                Players.PlayerRemoving:Connect(function()
+                    TracerLine.Visible = false
+                end)
+            end
+        end)
+    end)
 end
-
---// Makes sure that the player is not typing because it would trigger something if they hit a key that plays a role in this script.
 
 UserInputService.TextBoxFocused:Connect(function()
     Typing = true
@@ -249,10 +157,8 @@ UserInputService.TextBoxFocusReleased:Connect(function()
     Typing = false
 end)
 
---// Checks for if you pressed one of the keys that play a role in the script - if so, then the script activates.
-
 UserInputService.InputBegan:Connect(function(Input)
-    if Input.KeyCode == _G.ModeSkipKey and Typing == false then -- Checks if the key that you pressed was the key that was assigned to the global variable ModeSkipKey.
+    if Input.KeyCode == _G.ModeSkipKey and Typing == false then
         if _G.FromMouse == true and _G.FromCenter == false and _G.FromBottom == false and _G.TracersVisible == true then
             _G.FromCenter = false
             _G.FromBottom = true
@@ -290,8 +196,8 @@ UserInputService.InputBegan:Connect(function(Input)
                 })
             end
         end
-    elseif Input.KeyCode == _G.DisableKey and Typing == false then -- Otherwise if the key that you pressed wasn't ModeSkipKey and it was the key that was assigned to the global variable DisableKey then it executes the code wrapped below.
-        _G.TracersVisible = not _G.TracersVisible -- Changes the global variable TracersVisible's value to the opposite of what it was.
+    elseif Input.KeyCode == _G.DisableKey and Typing == false then
+        _G.TracersVisible = not _G.TracersVisible
         
         if _G.SendNotifications == true then
             game:GetService("StarterGui"):SetCore("SendNotification",{
@@ -303,31 +209,24 @@ UserInputService.InputBegan:Connect(function(Input)
     end
 end)
 
---// Checks if the global variable DefaultSettings is set to true, and if it is then it applies the default value to all of the settings.
-
 if _G.DefaultSettings == true then
     _G.TeamCheck = false
-    _G.VisibleWhenNotInSight = false
     _G.FromMouse = false
     _G.FromCenter = false
     _G.FromBottom = true
     _G.TracersVisible = true
     _G.TracerColor = Color3.fromRGB(40, 90, 255)
     _G.TracerThickness = 1
-    _G.TracerTransparency = 1
+    _G.TracerTransparency = 0.5
     _G.ModeSkipKey = Enum.KeyCode.E
     _G.DisableKey = Enum.KeyCode.Q
 end
 
---// function wrapped in a protective call (pcall) so that we can know the state of the script executed.
-
 local Success, Errored = pcall(function()
-    CreateTracers() -- Calls the function CreateTracers which creates the tracers.
+    CreateTracers()
 end)
 
---// Informs the user that the script has loaded with no errors right after the script executes.
-
-if Success and not Errored then -- If the script's execution was successfull then we notify the user that it didn't error.
+if Success and not Errored then
     if _G.SendNotifications == true then
         game:GetService("StarterGui"):SetCore("SendNotification",{
             Title = "Ubicast Developer";
@@ -335,7 +234,7 @@ if Success and not Errored then -- If the script's execution was successfull the
             Duration = 5;
         })
     end
-elseif Errored and not Success then -- And if the script's execution was not successfull and errored then we notify the user that it errored.
+elseif Errored and not Success then
     if _G.SendNotifications == true then
         game:GetService("StarterGui"):SetCore("SendNotification",{
             Title = "Ubicast Developer";
@@ -344,8 +243,6 @@ elseif Errored and not Success then -- And if the script's execution was not suc
         })
     end
     TestService:Message("The tracer script has errored, please notify Ubicast with the following information :")
-    warn(Errored) -- If the script errored we want to know what was the error.
+    warn(Errored)
     print("!! IF THE ERROR IS A FALSE POSITIVE (says that a player cannot be found) THEN DO NOT BOTHER !!")
 end
-
---<========================================================================================================================>--
