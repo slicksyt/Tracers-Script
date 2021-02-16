@@ -92,6 +92,8 @@ local function CreateTracers()
                     else
                         TracerLine.Visible = false
                     end
+                else
+                    TracerLine.Visible = false
                 end
             end)
 
