@@ -1,14 +1,3 @@
---[[
-
-		██╗░░░██╗██████╗░██╗░█████╗░░█████╗░░██████╗████████╗
-		██║░░░██║██╔══██╗██║██╔══██╗██╔══██╗██╔════╝╚══██╔══╝
-		██║░░░██║██████╦╝██║██║░░╚═╝███████║╚█████╗░░░░██║░░░
-		██║░░░██║██╔══██╗██║██║░░██╗██╔══██║░╚═══██╗░░░██║░░░
-		╚██████╔╝██████╦╝██║╚█████╔╝██║░░██║██████╔╝░░░██║░░░
-		░╚═════╝░╚═════╝░╚═╝░╚════╝░╚═╝░░╚═╝╚═════╝░░░░╚═╝░░░
-
-]]
-
 local function API_Check()
     if Drawing == nil then
         return "No"
@@ -21,7 +10,7 @@ local Find_Required = API_Check()
 
 if Find_Required == "No" then
     game:GetService("StarterGui"):SetCore("SendNotification",{
-        Title = "Ubicast Developer";
+        Title = "Exunys Developer";
         Text = "Tracer script could not be loaded because your exploit is unsupported.";
         Duration = math.huge;
         Button1 = "OK"
@@ -58,7 +47,7 @@ _G.ModeSkipKey = Enum.KeyCode.E   -- The key that changes between modes that ind
 _G.DisableKey = Enum.KeyCode.Q   -- The key that disables / enables the tracers.
 
 local function CreateTracers()
-    for _, v in pairs(Players:GetPlayers()) do
+    for _, v in next, Players:GetPlayers() do
         if v.Name ~= game.Players.LocalPlayer.Name then
             local TracerLine = Drawing.new("Line")
     
@@ -112,7 +101,7 @@ local function CreateTracers()
                 RunService.RenderStepped:Connect(function()
                     if workspace:FindFirstChild(v.Name) ~= nil and workspace[v.Name]:FindFirstChild("HumanoidRootPart") ~= nil then
                         local HumanoidRootPart_Position, HumanoidRootPart_Size = workspace[v.Name].HumanoidRootPart.CFrame, workspace[v.Name].HumanoidRootPart.Size * 1
-                    local Vector, OnScreen = Camera:WorldToViewportPoint(HumanoidRootPart_Position * CFrame.new(0, -HumanoidRootPart_Size.Y, 0).p)
+                    	local Vector, OnScreen = Camera:WorldToViewportPoint(HumanoidRootPart_Position * CFrame.new(0, -HumanoidRootPart_Size.Y, 0).p)
                         
                         TracerLine.Thickness = _G.TracerThickness
                         TracerLine.Transparency = _G.TracerTransparency
@@ -170,7 +159,7 @@ UserInputService.InputBegan:Connect(function(Input)
 
             if _G.SendNotifications == true then
                 game:GetService("StarterGui"):SetCore("SendNotification",{
-                    Title = "Ubicast Developer";
+                    Title = "Exunys Developer";
                     Text = "Tracers will be now coming from the bottom of your screen (Mode 1)";
                     Duration = 5;
                 })
@@ -182,7 +171,7 @@ UserInputService.InputBegan:Connect(function(Input)
 
             if _G.SendNotifications == true then
                 game:GetService("StarterGui"):SetCore("SendNotification",{
-                    Title = "Ubicast Developer";
+                    Title = "Exunys Developer";
                     Text = "Tracers will be now coming from the center of your screen (Mode 2)";
                     Duration = 5;
                 })
@@ -194,7 +183,7 @@ UserInputService.InputBegan:Connect(function(Input)
 
             if _G.SendNotifications == true then
                 game:GetService("StarterGui"):SetCore("SendNotification",{
-                    Title = "Ubicast Developer";
+                    Title = "Exunys Developer";
                     Text = "Tracers will be now coming from the position of your mouse cursor on your screen (Mode 3)";
                     Duration = 5;
                 })
@@ -205,7 +194,7 @@ UserInputService.InputBegan:Connect(function(Input)
         
         if _G.SendNotifications == true then
             game:GetService("StarterGui"):SetCore("SendNotification",{
-                Title = "Ubicast Developer";
+                Title = "Exunys Developer";
                 Text = "The tracers' visibility is now set to "..tostring(_G.TracersVisible)..".";
                 Duration = 5;
             })
@@ -233,7 +222,7 @@ end)
 if Success and not Errored then
     if _G.SendNotifications == true then
         game:GetService("StarterGui"):SetCore("SendNotification",{
-            Title = "Ubicast Developer";
+            Title = "Exunys Developer";
             Text = "Tracer script has successfully loaded.";
             Duration = 5;
         })
@@ -241,12 +230,12 @@ if Success and not Errored then
 elseif Errored and not Success then
     if _G.SendNotifications == true then
         game:GetService("StarterGui"):SetCore("SendNotification",{
-            Title = "Ubicast Developer";
+            Title = "Exunys Developer";
             Text = "Tracer script has errored while loading, please check the developer console! (F9)";
             Duration = 5;
         })
     end
-    TestService:Message("The tracer script has errored, please notify Ubicast with the following information :")
+    TestService:Message("The tracer script has errored, please notify Exunys with the following information :")
     warn(Errored)
     print("!! IF THE ERROR IS A FALSE POSITIVE (says that a player cannot be found) THEN DO NOT BOTHER !!")
 end
