@@ -21,7 +21,7 @@ local TestService = game:GetService("TestService")
 
 local Typing = false
 
-_G.SendNotifications = true   -- If set to true then the script would notify you frequently on any changes applied and when loaded / errored. (If a game can detect this, it is recommended to set it to false)
+_G.SendNotifications = False   -- If set to true then the script would notify you frequently on any changes applied and when loaded / errored. (If a game can detect this, it is recommended to set it to false)
 _G.DefaultSettings = false   -- If set to true then the tracer script would run with default settings regardless of any changes you made.
 
 _G.TeamCheck = false   -- If set to true then the script would create tracers only for the enemy team members.
