@@ -9,12 +9,6 @@ end
 local Find_Required = API_Check()
 
 if Find_Required == "No" then
-    game:GetService("StarterGui"):SetCore("SendNotification",{
-        Title = "Exunys Developer";
-        Text = "Tracer script could not be loaded because your exploit is unsupported.";
-        Duration = math.huge;
-        Button1 = "OK"
-    })
 
     return
 end
